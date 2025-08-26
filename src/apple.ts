@@ -1,5 +1,5 @@
-import { dateDistanceDays, jaccard, norm } from "./helpers";
-import {PlatformEpisode} from "./models";
+import { dateDistanceDays, jaccard, norm } from "./helpers.js";
+import type { PlatformEpisode } from "./models";
 
 export async function getLatestAppleEpisode(
     showId: string,

@@ -1,5 +1,5 @@
-import { dateDistanceDays, jaccard, norm } from "./helpers";
-import type {PlatformEpisode, SpotifyToken} from "./models";
+import { dateDistanceDays, jaccard, norm } from "./helpers.js";
+import type { PlatformEpisode, SpotifyToken } from "./models";
 
 let cacheToken: SpotifyToken | null = null;
 

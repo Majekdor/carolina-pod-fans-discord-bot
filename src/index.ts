@@ -1,10 +1,10 @@
-import { assertEnv, sleep } from "./helpers";
-import { loadState, saveState } from "./state";
-import { fetchLatestEpisode } from "./rss";
-import { getLatestAppleEpisode } from "./apple";
-import { getLatestSpotifyEpisode } from "./spotify";
-import { createForumPost } from "./discord";
-import { startHealthServer } from "./health";
+import { assertEnv, sleep } from "./helpers.js";
+import { loadState, saveState } from "./state.js";
+import { fetchLatestEpisode } from "./rss.js";
+import { getLatestAppleEpisode } from "./apple.js";
+import { getLatestSpotifyEpisode } from "./spotify.js";
+import { createForumPost } from "./discord.js";
+import { startHealthServer } from "./health.js";
 import type { Embed } from "./models";
 
 // ================== Config (ENV) ==================
