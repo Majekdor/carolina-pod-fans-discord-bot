@@ -1,4 +1,7 @@
-export type BotState = { lastGuid?: string };
+export type BotState = {
+    lastGuid?: string;
+    lastSpotifyEpisodeId?: string;
+};
 
 export type Episode = {
     guid: string;
@@ -7,6 +10,11 @@ export type Episode = {
     pubDate: Date;
     audioUrl?: string;
 };
+
+export type PlatformEpisode = {
+    episodeId: string;
+    link: string;
+}
 
 export type Embed = {
     title?: string;

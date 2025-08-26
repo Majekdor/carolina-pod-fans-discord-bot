@@ -1,11 +1,12 @@
 import { dateDistanceDays, jaccard, norm } from "./helpers";
+import {PlatformEpisode} from "./models";
 
-export async function getAppleEpisodeLink(
+export async function getLatestAppleEpisode(
     showId: string,
     title: string,
     pubDate: Date,
     country: string
-): Promise<string | null> {
+): Promise<PlatformEpisode | null> {
     if (!showId) return null;
     const url = `https://itunes.apple.com/lookup?id=${showId}&entity=podcastEpisode&country=${country}&limit=200`;
     const res = await fetch(url);
@@ -22,5 +23,15 @@ export async function getAppleEpisodeLink(
         })
         .sort((a: any, b: any) => a.score - b.score)[0];
 
-    return best?.e?.trackViewUrl || null;
+    const trackViewUrl = best?.e?.trackViewUrl;
+    const episodeGuid = best?.e?.episodeGuid;
+
+    if (!trackViewUrl || !episodeGuid) {
+        return null;
+    }
+
+    return {
+        episodeId: episodeGuid,
+        link: trackViewUrl
+    }
 }

@@ -1,5 +1,5 @@
 import { dateDistanceDays, jaccard, norm } from "./helpers";
-import type { SpotifyToken } from "./models";
+import type {PlatformEpisode, SpotifyToken} from "./models";
 
 let cacheToken: SpotifyToken | null = null;
 
@@ -22,14 +22,14 @@ async function spotifyToken(clientId: string, clientSecret: string): Promise<str
     return json.access_token;
 }
 
-export async function getSpotifyEpisodeLink(
+export async function getLatestSpotifyEpisode(
     showId: string,
     title: string,
     pubDate: Date,
     market: string,
     clientId: string,
     clientSecret: string
-): Promise<string | null> {
+): Promise<PlatformEpisode | null> {
     if (!showId) return null;
     const token = await spotifyToken(clientId, clientSecret);
     const res = await fetch(
@@ -49,5 +49,15 @@ export async function getSpotifyEpisodeLink(
         })
         .sort((a, b) => a.score - b.score)[0];
 
-    return best?.e?.external_urls?.spotify ?? null;
+    const link = best?.e?.external_urls?.spotify;
+    const episodeId = best?.e?.id;
+
+    if (!link || !episodeId) {
+        return null;
+    }
+
+    return {
+        episodeId,
+        link
+    }
 }

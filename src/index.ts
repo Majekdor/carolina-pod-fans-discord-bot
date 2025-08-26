@@ -1,8 +1,8 @@
 import { assertEnv, sleep } from "./helpers";
 import { loadState, saveState } from "./state";
 import { fetchLatestEpisode } from "./rss";
-import { getAppleEpisodeLink } from "./apple";
-import { getSpotifyEpisodeLink } from "./spotify";
+import { getLatestAppleEpisode } from "./apple";
+import { getLatestSpotifyEpisode } from "./spotify";
 import { createForumPost } from "./discord";
 import { startHealthServer } from "./health";
 import type { Embed } from "./models";
@@ -37,14 +37,14 @@ async function runOnce() {
     if (state.lastGuid === latest.guid) return; // nothing new
 
     // Resolve podcast platform links in parallel
-    const [appleLink, spotifyLink] = await Promise.all([
-        getAppleEpisodeLink(
+    const [appleEpisode, spotifyEpisode] = await Promise.all([
+        getLatestAppleEpisode(
             APPLE_SHOW_ID!,
             latest.title,
             latest.pubDate,
             APPLE_COUNTRY
         ),
-        getSpotifyEpisodeLink(
+        getLatestSpotifyEpisode(
             SPOTIFY_SHOW_ID!,
             latest.title,
             latest.pubDate,
@@ -54,7 +54,10 @@ async function runOnce() {
         )
     ]);
 
-    if (!appleLink || !spotifyLink) {
+    if (appleEpisode?.episodeId === state.lastGuid) return; // Something new, but Apple Podcasts hasn't updated yet
+    if (spotifyEpisode?.episodeId === state.lastSpotifyEpisodeId) return; // Something new, but Spotify hasn't updated yet
+
+    if (!appleEpisode || !spotifyEpisode) {
         console.log(`[skipped] ${latest.title}`);
         return;
     }
@@ -67,8 +70,8 @@ async function runOnce() {
         "\n",
         cleanDesc,
         "\n",
-        appleLink ? `**Apple Podcasts:** ${appleLink}` : "• Apple link: _(not found yet)_",
-        spotifyLink ? `**Spotify:** ${spotifyLink}` : "• Spotify link: _(not found yet)_"
+        appleEpisode ? `**Apple Podcasts:** ${appleEpisode.link}` : "• Apple link: _(not found yet)_",
+        spotifyEpisode ? `**Spotify:** ${spotifyEpisode.link}` : "• Spotify link: _(not found yet)_"
     ].filter(Boolean);
 
     const embeds: Embed[] = [];
@@ -86,7 +89,10 @@ async function runOnce() {
         embeds
     );
 
-    await saveState({ lastGuid: latest.guid });
+    await saveState({
+        lastGuid: latest.guid,
+        lastSpotifyEpisodeId: spotifyEpisode?.episodeId
+    });
     console.log(`[posted] ${latest.title}`);
 }
 
