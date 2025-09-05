@@ -54,13 +54,13 @@ async function runOnce() {
         )
     ]);
 
-    if (appleEpisode?.episodeId === state.lastGuid) return; // Something new, but Apple Podcasts hasn't updated yet
-    if (spotifyEpisode?.episodeId === state.lastSpotifyEpisodeId) return; // Something new, but Spotify hasn't updated yet
-
-    if (!appleEpisode || !spotifyEpisode) {
-        console.log(`[skipped] ${latest.title}`);
-        return;
-    }
+    // if (appleEpisode?.episodeId === state.lastGuid) return; // Something new, but Apple Podcasts hasn't updated yet
+    // if (spotifyEpisode?.episodeId === state.lastSpotifyEpisodeId) return; // Something new, but Spotify hasn't updated yet
+    //
+    // if (!appleEpisode || !spotifyEpisode) {
+    //     console.log(`[skipped] ${latest.title}`);
+    //     return;
+    // }
 
     // Compose post
     const cleanDesc = (latest.description || "").replaceAll("\n", "\n\n");
@@ -69,9 +69,9 @@ async function runOnce() {
         `**${latest.title}**`,
         "\n",
         cleanDesc,
-        "\n",
-        appleEpisode ? `**Apple Podcasts:** ${appleEpisode.link}` : "• Apple link: _(not found yet)_",
-        spotifyEpisode ? `**Spotify:** ${spotifyEpisode.link}` : "• Spotify link: _(not found yet)_"
+        // "\n",
+        // appleEpisode ? `**Apple Podcasts:** ${appleEpisode.link}` : "• Apple link: _(not found yet)_",
+        // spotifyEpisode ? `**Spotify:** ${spotifyEpisode.link}` : "• Spotify link: _(not found yet)_"
     ].filter(Boolean);
 
     const embeds: Embed[] = [];
