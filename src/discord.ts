@@ -8,8 +8,17 @@ export async function createForumPost(
     embeds?: Embed[],
     applied_tags?: string[]
 ) {
+    // Validate and truncate name to Discord's length requirements (1-100 chars)
+    let validatedName = name.trim();
+    if (!validatedName) {
+        throw new Error("Forum post name cannot be empty");
+    }
+    if (validatedName.length > 100) {
+        validatedName = validatedName.substring(0, 97) + "...";
+    }
+
     const body = {
-        name,
+        name: validatedName,
         auto_archive_duration: 4320, // 3 days
         applied_tags,
         message: {
