@@ -37,22 +37,22 @@ async function runOnce() {
     if (state.lastGuid === latest.guid) return; // nothing new
 
     // Resolve podcast platform links in parallel
-    const [appleEpisode, spotifyEpisode] = await Promise.all([
-        getLatestAppleEpisode(
-            APPLE_SHOW_ID!,
-            latest.title,
-            latest.pubDate,
-            APPLE_COUNTRY
-        ),
-        getLatestSpotifyEpisode(
-            SPOTIFY_SHOW_ID!,
-            latest.title,
-            latest.pubDate,
-            SPOTIFY_MARKET,
-            SPOTIFY_CLIENT_ID!,
-            SPOTIFY_CLIENT_SECRET!
-        )
-    ]);
+    // const [appleEpisode, spotifyEpisode] = await Promise.all([
+    //     getLatestAppleEpisode(
+    //         APPLE_SHOW_ID!,
+    //         latest.title,
+    //         latest.pubDate,
+    //         APPLE_COUNTRY
+    //     ),
+    //     getLatestSpotifyEpisode(
+    //         SPOTIFY_SHOW_ID!,
+    //         latest.title,
+    //         latest.pubDate,
+    //         SPOTIFY_MARKET,
+    //         SPOTIFY_CLIENT_ID!,
+    //         SPOTIFY_CLIENT_SECRET!
+    //     )
+    // ]);
 
     // if (appleEpisode?.episodeId === state.lastGuid) return; // Something new, but Apple Podcasts hasn't updated yet
     // if (spotifyEpisode?.episodeId === state.lastSpotifyEpisodeId) return; // Something new, but Spotify hasn't updated yet
@@ -91,7 +91,7 @@ async function runOnce() {
 
     await saveState({
         lastGuid: latest.guid,
-        lastSpotifyEpisodeId: spotifyEpisode?.episodeId
+        lastSpotifyEpisodeId: undefined//spotifyEpisode?.episodeId
     });
     console.log(`[posted] ${latest.title}`);
 }
